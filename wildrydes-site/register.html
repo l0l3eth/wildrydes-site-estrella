@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register - Wild Rydes</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial, sans-serif; background: #1a1a2e; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+    .card { background: #16213e; padding: 40px; border-radius: 10px; width: 100%; max-width: 400px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    h2 { color: #e94560; text-align: center; margin-bottom: 30px; }
+    input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #333; border-radius: 5px; background: #0f3460; color: white; box-sizing: border-box; font-size: 1em; }
+    button { width: 100%; padding: 12px; background: #e94560; color: white; border: none; border-radius: 5px; font-size: 1em; cursor: pointer; margin-top: 10px; }
+    button:hover { background: #c73652; }
+    a { color: #e94560; }
+    .links { text-align: center; margin-top: 15px; }
+    #noCognitoMessage { color: #e94560; display: none; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>🦄 Create Account</h2>
+    <p id="noCognitoMessage">Cognito is not configured. Update js/config.js</p>
+    <form id="registrationForm">
+      <input type="email" id="emailInputRegister" placeholder="Email address" required>
+      <input type="password" id="passwordInputRegister" placeholder="Password (min 8 chars)" required>
+      <input type="password" id="password2InputRegister" placeholder="Confirm password" required>
+      <button type="submit">Register</button>
+    </form>
+    <div class="links">
+      <p>Already have an account? <a href="signin.html">Sign in</a></p>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js/dist/amazon-cognito-identity.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/cognito-auth.js"></script>
+</body>
+</html>

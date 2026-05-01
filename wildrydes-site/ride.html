@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ride - Wild Rydes</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial, sans-serif; background: #1a1a2e; color: white; margin: 0; }
+    .navbar { background: #16213e; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+    .navbar h1 { color: #e94560; margin: 0; font-size: 1.5em; }
+    .navbar button { padding: 8px 20px; background: #e94560; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    .main { padding: 30px; text-align: center; }
+    #authMessage { color: #e94560; }
+    .ride-panel { background: #16213e; padding: 30px; border-radius: 10px; max-width: 500px; margin: 20px auto; }
+    button.request-btn { padding: 15px 40px; background: #e94560; color: white; border: none; border-radius: 5px; font-size: 1.1em; cursor: pointer; }
+    #rideResult { margin-top: 20px; padding: 20px; background: #0f3460; border-radius: 8px; display: none; text-align: left; }
+    #rideResult h3 { color: #e94560; }
+    pre { color: #a8a8b3; white-space: pre-wrap; word-break: break-all; }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <h1>🦄 Wild Rydes</h1>
+    <button id="signOutButton">Sign Out</button>
+  </div>
+  <div class="main">
+    <p id="authMessage"></p>
+    <div class="ride-panel">
+      <h2>Request a Unicorn</h2>
+      <p>Click below to summon your unicorn ride!</p>
+      <button class="request-btn" id="requestButton" onclick="requestRide()">Request Unicorn 🦄</button>
+      <div id="rideResult">
+        <h3>Your Ride is on the way!</h3>
+        <pre id="rideDetails"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js/dist/amazon-cognito-identity.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/cognito-auth.js"></script>
+  <script>
+    function requestRide() {
+      if (!_config.api.invokeUrl) {
+        alert('API Gateway URL not configured yet. Update invokeUrl in js/config.js (Module 4).');
+        return;
+      }
+      WildRydes.authToken.then(function(token) {
+        if (!token) { window.location.href = '/signin.html'; return; }
+        $.ajax({
+          method: 'POST',
+          url: _config.api.invokeUrl + '/ride',
+          headers: { Authorization: token },
+          data: JSON.stringify({ PickupLocation: { Latitude: 42.36, Longitude: -71.057 } }),
+          contentType: 'application/json',
+          success: function(result) {
+            $('#rideResult').show();
+            $('#rideDetails').text(JSON.stringify(result, null, 2));
+          },
+          error: function(err) {
+            alert('Error: ' + JSON.stringify(err.responseJSON || err.statusText));
+          }
+        });
+      });
+    }
+
+    // Check auth on load
+    WildRydes.authToken.then(function(token) {
+      if (!token) {
+        $('#authMessage').text('You are not signed in. Redirecting...');
+        setTimeout(function() { window.location.href = '/signin.html'; }, 2000);
+      }
+    });
+  </script>
+</body>
+</html>
